@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "name": "Motion at night, snapshot and notify",
+  "description": "During night hours, captures a fresh snapshot on motion and sends it as a notification.",
+  "inputs": [
+    { "key": "camera", "type": "camera", "label": "Camera to watch" },
+    { "key": "notify", "type": "notification-targets", "label": "Who to notify", "multiple": true }
+  ],
+  "nodes": [
+    {
+      "id": "trigger-1",
+      "type": "trigger-detection",
+      "position": { "x": 0, "y": 0 },
+      "data": {
+        "type": "trigger-detection",
+        "cameraId": "{{input:camera}}",
+        "eventPhase": ["start"],
+        "detectionLabels": [],
+        "confidenceThreshold": 0,
+        "audioLabels": [],
+        "faceFilter": [],
+        "licensePlateFilter": []
+      }
+    },
+    {
+      "id": "condition-1",
+      "type": "condition-time",
+      "position": { "x": 320, "y": 0 },
+      "data": {
+        "type": "condition-time",
+        "startTime": "22:00",
+        "endTime": "06:00",
+        "days": []
+      }
+    },
+    {
+      "id": "action-1",
+      "type": "action-snapshot",
+      "position": { "x": 640, "y": 0 },
+      "data": {
+        "type": "action-snapshot",
+        "cameraId": "{{input:camera}}",
+        "forceNew": true
+      }
+    },
+    {
+      "id": "action-2",
+      "type": "action-notification",
+      "position": { "x": 960, "y": 0 },
+      "data": {
+        "type": "action-notification",
+        "title": "Night motion",
+        "body": "Motion detected during night hours.",
+        "severity": "warn",
+        "deepLink": "",
+        "targets": ["{{input:notify}}"],
+        "image": "{{snapshot.base64}}"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-1",
+      "source": "trigger-1",
+      "target": "condition-1",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    },
+    {
+      "id": "edge-2",
+      "source": "condition-1",
+      "target": "action-1",
+      "sourceHandle": "true",
+      "targetHandle": "target"
+    },
+    {
+      "id": "edge-3",
+      "source": "action-1",
+      "target": "action-2",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    }
+  ]
+}

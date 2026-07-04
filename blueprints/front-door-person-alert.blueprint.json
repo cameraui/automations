@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "name": "Front door person alert",
+  "description": "Sends a notification whenever a person is detected on the selected camera.",
+  "inputs": [
+    { "key": "camera", "type": "camera", "label": "Camera to watch" },
+    { "key": "detector", "type": "plugin", "interface": "ObjectDetection", "label": "Object detection plugin" },
+    { "key": "notify", "type": "notification-targets", "label": "Who to notify", "multiple": true }
+  ],
+  "nodes": [
+    {
+      "id": "trigger-1",
+      "type": "trigger-detection",
+      "position": { "x": 0, "y": 0 },
+      "data": {
+        "type": "trigger-detection",
+        "cameraId": "{{input:camera}}",
+        "eventPhase": ["start"],
+        "detectionLabels": ["person"],
+        "confidenceThreshold": 0.6,
+        "audioLabels": [],
+        "faceFilter": [],
+        "licensePlateFilter": []
+      }
+    },
+    {
+      "id": "action-1",
+      "type": "action-notification",
+      "position": { "x": 320, "y": 0 },
+      "data": {
+        "type": "action-notification",
+        "title": "Person detected",
+        "body": "A person was detected at the front door.",
+        "severity": "warn",
+        "deepLink": "",
+        "targets": ["{{input:notify}}"]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-1",
+      "source": "trigger-1",
+      "target": "action-1",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    }
+  ]
+}

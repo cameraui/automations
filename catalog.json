@@ -1,0 +1,73 @@
+{
+  "front-door-person-alert": {
+    "title": "Front door person alert",
+    "description": "Sends a notification whenever a person is detected on the selected camera.",
+    "category": "detection",
+    "author": "camera.ui",
+    "featured": true,
+    "tags": [
+      "detection",
+      "doorbell",
+      "person"
+    ],
+    "requiredPlugins": [
+      "ObjectDetection"
+    ],
+    "requiredInputs": [
+      {
+        "type": "camera",
+        "count": 1
+      },
+      {
+        "type": "notification-targets"
+      }
+    ],
+    "blueprint": "blueprints/front-door-person-alert.blueprint.json"
+  },
+  "motion-night-snapshot-notify": {
+    "title": "Motion at night, snapshot and notify",
+    "description": "During night hours, captures a fresh snapshot on motion and sends it as a notification.",
+    "category": "notification",
+    "author": "camera.ui",
+    "featured": false,
+    "tags": [
+      "motion",
+      "night",
+      "snapshot"
+    ],
+    "requiredPlugins": [],
+    "requiredInputs": [
+      {
+        "type": "camera",
+        "count": 1
+      },
+      {
+        "type": "notification-targets"
+      }
+    ],
+    "blueprint": "blueprints/motion-night-snapshot-notify.blueprint.json"
+  },
+  "person-detected-notifier-plugin": {
+    "title": "Person detected, dispatch via notifier plugin",
+    "description": "When a person is detected, dispatches an alert through a notifier plugin (e.g. push, messaging).",
+    "category": "notification",
+    "author": "camera.ui",
+    "featured": false,
+    "tags": [
+      "detection",
+      "person",
+      "plugin"
+    ],
+    "requiredPlugins": [
+      "Notifier",
+      "ObjectDetection"
+    ],
+    "requiredInputs": [
+      {
+        "type": "camera",
+        "count": 1
+      }
+    ],
+    "blueprint": "blueprints/person-detected-notifier-plugin.blueprint.json"
+  }
+}

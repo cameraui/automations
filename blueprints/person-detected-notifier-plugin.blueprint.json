@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "name": "Person detected, dispatch via notifier plugin",
+  "description": "When a person is detected, dispatches an alert through a notifier plugin (e.g. push, messaging).",
+  "inputs": [
+    { "key": "camera", "type": "camera", "label": "Camera to watch" },
+    { "key": "detector", "type": "plugin", "interface": "ObjectDetection", "label": "Object detection plugin" },
+    { "key": "notifier", "type": "plugin", "interface": "Notifier", "label": "Notifier plugin" }
+  ],
+  "nodes": [
+    {
+      "id": "trigger-1",
+      "type": "trigger-detection",
+      "position": { "x": 0, "y": 0 },
+      "data": {
+        "type": "trigger-detection",
+        "cameraId": "{{input:camera}}",
+        "eventPhase": ["start"],
+        "detectionLabels": ["person"],
+        "confidenceThreshold": 0.6,
+        "audioLabels": [],
+        "faceFilter": [],
+        "licensePlateFilter": []
+      }
+    },
+    {
+      "id": "action-1",
+      "type": "action-plugin",
+      "position": { "x": 320, "y": 0 },
+      "data": {
+        "type": "action-plugin",
+        "pluginName": "{{input:notifier}}",
+        "pluginInterface": "Notifier",
+        "method": "sendNotification",
+        "params": {
+          "title": "Person detected",
+          "body": "A person was detected on {{event.cameraId}}."
+        },
+        "config": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-1",
+      "source": "trigger-1",
+      "target": "action-1",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    }
+  ]
+}
