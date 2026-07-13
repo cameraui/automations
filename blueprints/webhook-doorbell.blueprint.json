@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "name": "Webhook doorbell",
+  "description": "Rings a doorbell sensor whenever the webhook is called, e.g. by a smart button or a third-party system. Works great with a virtual doorbell sensor.",
+  "inputs": [
+    {
+      "key": "camera",
+      "type": "camera",
+      "label": "Camera of the doorbell sensor"
+    },
+    {
+      "key": "doorbell",
+      "type": "sensor",
+      "label": "Doorbell sensor to ring"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "trigger-1",
+      "type": "trigger-webhook",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "data": {
+        "type": "trigger-webhook",
+        "webhookId": ""
+      }
+    },
+    {
+      "id": "action-1",
+      "type": "action-sensor",
+      "position": {
+        "x": 320,
+        "y": 0
+      },
+      "data": {
+        "type": "action-sensor",
+        "cameraId": "{{input:camera}}",
+        "sensorType": "{{input:doorbell}}",
+        "sensorName": "{{input:doorbell}}",
+        "sensorPluginId": "{{input:doorbell}}",
+        "properties": [
+          {
+            "property": "ring",
+            "value": "true"
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-1",
+      "source": "trigger-1",
+      "target": "action-1",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    }
+  ]
+}

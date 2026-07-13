@@ -1,4 +1,31 @@
 {
+  "doorbell-ring-notify": {
+    "title": "Doorbell ring notification",
+    "description": "Sends a critical notification when the selected doorbell sensor rings. Works with real doorbells and virtual doorbell sensors.",
+    "category": "notification",
+    "author": "camera.ui",
+    "featured": false,
+    "tags": [
+      "doorbell",
+      "sensor",
+      "notification"
+    ],
+    "requiredPlugins": [],
+    "requiredInputs": [
+      {
+        "type": "camera",
+        "count": 1
+      },
+      {
+        "type": "sensor",
+        "count": 1
+      },
+      {
+        "type": "notification-targets"
+      }
+    ],
+    "blueprint": "blueprints/doorbell-ring-notify.blueprint.json"
+  },
   "front-door-person-alert": {
     "title": "Front door person alert",
     "description": "Sends a notification whenever a person is detected on the selected camera.",
@@ -47,6 +74,30 @@
     ],
     "blueprint": "blueprints/motion-night-snapshot-notify.blueprint.json"
   },
+  "mqtt-doorbell": {
+    "title": "MQTT doorbell",
+    "description": "Rings a doorbell sensor when a matching MQTT message arrives, e.g. from a Shelly, Tasmota or Zigbee2MQTT device. The trigger matches a value inside the JSON payload, so on/off devices ring exactly once per press. Works great with a virtual doorbell sensor. Requires MQTT to be enabled in the settings.",
+    "category": "mqtt",
+    "author": "camera.ui",
+    "featured": true,
+    "tags": [
+      "doorbell",
+      "mqtt",
+      "virtual-sensor"
+    ],
+    "requiredPlugins": [],
+    "requiredInputs": [
+      {
+        "type": "camera",
+        "count": 1
+      },
+      {
+        "type": "sensor",
+        "count": 1
+      }
+    ],
+    "blueprint": "blueprints/mqtt-doorbell.blueprint.json"
+  },
   "person-detected-notifier-plugin": {
     "title": "Person detected, dispatch via notifier plugin",
     "description": "When a person is detected, dispatches an alert through a notifier plugin (e.g. push, messaging).",
@@ -69,5 +120,29 @@
       }
     ],
     "blueprint": "blueprints/person-detected-notifier-plugin.blueprint.json"
+  },
+  "webhook-doorbell": {
+    "title": "Webhook doorbell",
+    "description": "Rings a doorbell sensor whenever the webhook is called, e.g. by a smart button or a third-party system. Works great with a virtual doorbell sensor.",
+    "category": "webhook",
+    "author": "camera.ui",
+    "featured": true,
+    "tags": [
+      "doorbell",
+      "webhook",
+      "virtual-sensor"
+    ],
+    "requiredPlugins": [],
+    "requiredInputs": [
+      {
+        "type": "camera",
+        "count": 1
+      },
+      {
+        "type": "sensor",
+        "count": 1
+      }
+    ],
+    "blueprint": "blueprints/webhook-doorbell.blueprint.json"
   }
 }

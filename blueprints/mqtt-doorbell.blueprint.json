@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "name": "MQTT doorbell",
+  "description": "Rings a doorbell sensor when a matching MQTT message arrives, e.g. from a Shelly, Tasmota or Zigbee2MQTT device. The trigger matches a value inside the JSON payload, so on/off devices ring exactly once per press. Works great with a virtual doorbell sensor. Requires MQTT to be enabled in the settings.",
+  "inputs": [
+    {
+      "key": "camera",
+      "type": "camera",
+      "label": "Camera of the doorbell sensor"
+    },
+    {
+      "key": "doorbell",
+      "type": "sensor",
+      "label": "Doorbell sensor to ring"
+    },
+    {
+      "key": "topic",
+      "type": "text",
+      "label": "MQTT topic",
+      "placeholder": "shellyplus1/status/switch:0"
+    },
+    {
+      "key": "jsonPath",
+      "type": "text",
+      "label": "JSON field to match",
+      "default": "output"
+    },
+    {
+      "key": "jsonValue",
+      "type": "text",
+      "label": "Value that rings the doorbell",
+      "default": "true"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "trigger-1",
+      "type": "trigger-mqtt",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "data": {
+        "type": "trigger-mqtt",
+        "topic": "{{input:topic}}",
+        "matchMode": "json",
+        "payloadFilter": "",
+        "jsonPath": "{{input:jsonPath}}",
+        "jsonValue": "{{input:jsonValue}}"
+      }
+    },
+    {
+      "id": "action-1",
+      "type": "action-sensor",
+      "position": {
+        "x": 320,
+        "y": 0
+      },
+      "data": {
+        "type": "action-sensor",
+        "cameraId": "{{input:camera}}",
+        "sensorType": "{{input:doorbell}}",
+        "sensorName": "{{input:doorbell}}",
+        "sensorPluginId": "{{input:doorbell}}",
+        "properties": [
+          {
+            "property": "ring",
+            "value": "true"
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-1",
+      "source": "trigger-1",
+      "target": "action-1",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    }
+  ]
+}

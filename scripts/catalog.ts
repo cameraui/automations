@@ -9,9 +9,9 @@ const __dirname = dirname(__filename);
 const ROOT = resolve(__dirname, '..');
 const BLUEPRINTS_DIR = resolve(ROOT, 'blueprints');
 
-type Category = 'notification' | 'recording' | 'presence' | 'detection' | 'schedule' | 'webhook' | 'scene' | 'utility' | 'other';
+type Category = 'notification' | 'recording' | 'presence' | 'detection' | 'schedule' | 'webhook' | 'mqtt' | 'scene' | 'utility' | 'other';
 
-type InputType = 'camera' | 'plugin' | 'sensor' | 'notification-targets' | 'system-target';
+type InputType = 'camera' | 'plugin' | 'sensor' | 'notification-targets' | 'system-target' | 'text';
 
 interface BlueprintInput {
   key: string;
@@ -19,6 +19,8 @@ interface BlueprintInput {
   label?: string;
   interface?: string;
   multiple?: boolean;
+  placeholder?: string;
+  default?: string;
 }
 
 interface RequiredInput {
@@ -48,6 +50,7 @@ const VALID_NODE_TYPES = [
   'trigger-system',
   'trigger-manual',
   'trigger-geofence',
+  'trigger-mqtt',
   'condition-ifelse',
   'condition-switch',
   'condition-sensorstate',
@@ -56,6 +59,7 @@ const VALID_NODE_TYPES = [
   'action-sensor',
   'action-notification',
   'action-http',
+  'action-mqtt',
   'action-delay',
   'action-variable',
   'action-plugin',
@@ -101,6 +105,9 @@ const CURATED: Record<string, { category: Category; featured: boolean; tags: str
   'front-door-person-alert': { category: 'detection', featured: true, tags: ['detection', 'doorbell', 'person'] },
   'motion-night-snapshot-notify': { category: 'notification', featured: false, tags: ['motion', 'night', 'snapshot'] },
   'person-detected-notifier-plugin': { category: 'notification', featured: false, tags: ['detection', 'person', 'plugin'] },
+  'webhook-doorbell': { category: 'webhook', featured: true, tags: ['doorbell', 'webhook', 'virtual-sensor'] },
+  'doorbell-ring-notify': { category: 'notification', featured: false, tags: ['doorbell', 'sensor', 'notification'] },
+  'mqtt-doorbell': { category: 'mqtt', featured: true, tags: ['doorbell', 'mqtt', 'virtual-sensor'] },
 };
 
 const DEFAULT_CURATED = { category: 'other' as Category, featured: false, tags: [] as string[], author: 'camera.ui' };
@@ -141,8 +148,10 @@ function deriveRequiredPlugins(bp: Blueprint): string[] {
 function deriveRequiredInputs(bp: Blueprint): RequiredInput[] {
   const counts = new Map<InputType, number>();
   for (const input of bp.inputs ?? []) {
-    // Plugin inputs are surfaced through requiredPlugins, not here.
-    if (input.type === 'plugin') continue;
+    // Plugin inputs are surfaced through requiredPlugins, not here. Text inputs
+    // are plain values the wizard prefills, not a resource the card must
+    // advertise — and clients without the text input type would choke on them.
+    if (input.type === 'plugin' || input.type === 'text') continue;
     counts.set(input.type, (counts.get(input.type) ?? 0) + 1);
   }
 

@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "name": "Doorbell ring notification",
+  "description": "Sends a critical notification when the selected doorbell sensor rings. Works with real doorbells and virtual doorbell sensors.",
+  "inputs": [
+    {
+      "key": "camera",
+      "type": "camera",
+      "label": "Camera of the doorbell sensor"
+    },
+    {
+      "key": "doorbell",
+      "type": "sensor",
+      "label": "Doorbell sensor to watch"
+    },
+    {
+      "key": "notify",
+      "type": "notification-targets",
+      "label": "Who to notify",
+      "multiple": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "trigger-1",
+      "type": "trigger-sensor",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "data": {
+        "type": "trigger-sensor",
+        "cameraId": "{{input:camera}}",
+        "sensorType": "{{input:doorbell}}",
+        "sensorName": "{{input:doorbell}}",
+        "sensorPluginId": "{{input:doorbell}}",
+        "properties": ["ring"]
+      }
+    },
+    {
+      "id": "condition-1",
+      "type": "condition-sensorstate",
+      "position": {
+        "x": 320,
+        "y": 0
+      },
+      "data": {
+        "type": "condition-sensorstate",
+        "cameraId": "{{input:camera}}",
+        "sensorType": "{{input:doorbell}}",
+        "sensorName": "{{input:doorbell}}",
+        "sensorPluginId": "{{input:doorbell}}",
+        "conditions": [
+          {
+            "property": "ring",
+            "expectedValue": "true"
+          }
+        ],
+        "logic": "AND"
+      }
+    },
+    {
+      "id": "action-1",
+      "type": "action-notification",
+      "position": {
+        "x": 640,
+        "y": 0
+      },
+      "data": {
+        "type": "action-notification",
+        "title": "Ding dong!",
+        "body": "Someone is at the door.",
+        "severity": "critical",
+        "deepLink": "",
+        "targets": ["{{input:notify}}"]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-1",
+      "source": "trigger-1",
+      "target": "condition-1",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    },
+    {
+      "id": "edge-2",
+      "source": "condition-1",
+      "target": "action-1",
+      "sourceHandle": "true",
+      "targetHandle": "target"
+    }
+  ]
+}
