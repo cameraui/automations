@@ -4,11 +4,6 @@
   "description": "Rings a doorbell sensor when a matching MQTT message arrives, e.g. from a Shelly, Tasmota or Zigbee2MQTT device. The trigger matches a value inside the JSON payload, so on/off devices ring exactly once per press. Works great with a virtual doorbell sensor. Requires MQTT to be enabled in the settings.",
   "inputs": [
     {
-      "key": "camera",
-      "type": "camera",
-      "label": "Camera of the doorbell sensor"
-    },
-    {
       "key": "doorbell",
       "type": "sensor",
       "label": "Doorbell sensor to ring"
@@ -58,10 +53,8 @@
       },
       "data": {
         "type": "action-sensor",
-        "cameraId": "{{input:camera}}",
-        "sensorType": "{{input:doorbell}}",
-        "sensorName": "{{input:doorbell}}",
-        "sensorPluginId": "{{input:doorbell}}",
+        "sensorId": "{{input:doorbell}}",
+        "sensorType": "",
         "properties": [
           {
             "property": "ring",

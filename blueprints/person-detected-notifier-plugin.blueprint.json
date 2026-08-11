@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "name": "Person detected, dispatch via notifier plugin",
-  "description": "When a person is detected, dispatches an alert through a notifier plugin (e.g. push, messaging).",
+  "name": "Person detected, snapshot to notifier",
+  "description": "When a person is detected, captures a fresh snapshot and sends it to the selected notification targets, e.g. push devices, email (SMTP plugin) or a messenger provided by a notifier plugin.",
   "inputs": [
     { "key": "camera", "type": "camera", "label": "Camera to watch" },
     { "key": "detector", "type": "plugin", "interface": "ObjectDetection", "label": "Object detection plugin" },
-    { "key": "notifier", "type": "plugin", "interface": "Notifier", "label": "Notifier plugin" }
+    { "key": "notify", "type": "notification-targets", "label": "Who to notify", "multiple": true }
   ],
   "nodes": [
     {
@@ -25,18 +25,26 @@
     },
     {
       "id": "action-1",
-      "type": "action-plugin",
+      "type": "action-snapshot",
       "position": { "x": 320, "y": 0 },
       "data": {
-        "type": "action-plugin",
-        "pluginName": "{{input:notifier}}",
-        "pluginInterface": "Notifier",
-        "method": "sendNotification",
-        "params": {
-          "title": "Person detected",
-          "body": "A person was detected on {{event.cameraId}}."
-        },
-        "config": {}
+        "type": "action-snapshot",
+        "cameraId": "{{input:camera}}",
+        "forceNew": true
+      }
+    },
+    {
+      "id": "action-2",
+      "type": "action-notification",
+      "position": { "x": 640, "y": 0 },
+      "data": {
+        "type": "action-notification",
+        "title": "Person detected",
+        "body": "A person was detected on the camera.",
+        "severity": "warn",
+        "deepLink": "",
+        "targets": ["{{input:notify}}"],
+        "image": "{{snapshot.base64}}"
       }
     }
   ],
@@ -45,6 +53,13 @@
       "id": "edge-1",
       "source": "trigger-1",
       "target": "action-1",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    },
+    {
+      "id": "edge-2",
+      "source": "action-1",
+      "target": "action-2",
       "sourceHandle": "source",
       "targetHandle": "target"
     }

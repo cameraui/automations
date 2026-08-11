@@ -4,11 +4,6 @@
   "description": "Sends a critical notification when the selected doorbell sensor rings. Works with real doorbells and virtual doorbell sensors.",
   "inputs": [
     {
-      "key": "camera",
-      "type": "camera",
-      "label": "Camera of the doorbell sensor"
-    },
-    {
       "key": "doorbell",
       "type": "sensor",
       "label": "Doorbell sensor to watch"
@@ -30,10 +25,8 @@
       },
       "data": {
         "type": "trigger-sensor",
-        "cameraId": "{{input:camera}}",
-        "sensorType": "{{input:doorbell}}",
-        "sensorName": "{{input:doorbell}}",
-        "sensorPluginId": "{{input:doorbell}}",
+        "sensorId": "{{input:doorbell}}",
+        "sensorType": "",
         "properties": ["ring"]
       }
     },
@@ -46,10 +39,8 @@
       },
       "data": {
         "type": "condition-sensorstate",
-        "cameraId": "{{input:camera}}",
-        "sensorType": "{{input:doorbell}}",
-        "sensorName": "{{input:doorbell}}",
-        "sensorPluginId": "{{input:doorbell}}",
+        "sensorId": "{{input:doorbell}}",
+        "sensorType": "",
         "conditions": [
           {
             "property": "ring",

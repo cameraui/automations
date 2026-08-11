@@ -13,10 +13,6 @@
     "requiredPlugins": [],
     "requiredInputs": [
       {
-        "type": "camera",
-        "count": 1
-      },
-      {
         "type": "sensor",
         "count": 1
       },
@@ -88,10 +84,6 @@
     "requiredPlugins": [],
     "requiredInputs": [
       {
-        "type": "camera",
-        "count": 1
-      },
-      {
         "type": "sensor",
         "count": 1
       }
@@ -99,8 +91,8 @@
     "blueprint": "blueprints/mqtt-doorbell.blueprint.json"
   },
   "person-detected-notifier-plugin": {
-    "title": "Person detected, dispatch via notifier plugin",
-    "description": "When a person is detected, dispatches an alert through a notifier plugin (e.g. push, messaging).",
+    "title": "Person detected, snapshot to notifier",
+    "description": "When a person is detected, captures a fresh snapshot and sends it to the selected notification targets, e.g. push devices, email (SMTP plugin) or a messenger provided by a notifier plugin.",
     "category": "notification",
     "author": "camera.ui",
     "featured": false,
@@ -110,13 +102,15 @@
       "plugin"
     ],
     "requiredPlugins": [
-      "Notifier",
       "ObjectDetection"
     ],
     "requiredInputs": [
       {
         "type": "camera",
         "count": 1
+      },
+      {
+        "type": "notification-targets"
       }
     ],
     "blueprint": "blueprints/person-detected-notifier-plugin.blueprint.json"
@@ -134,10 +128,6 @@
     ],
     "requiredPlugins": [],
     "requiredInputs": [
-      {
-        "type": "camera",
-        "count": 1
-      },
       {
         "type": "sensor",
         "count": 1
