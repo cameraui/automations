@@ -40,8 +40,7 @@ interface CatalogEntry {
   blueprint: string;
 }
 
-// This mirrors server/src/api/schemas/automations.schema.ts:importBlueprintSchema.
-// Kept in sync by hand — a blueprint that fails this MUST NOT ship.
+// copy of importBlueprintSchema in camera.ui server/src/api/schemas/automations.schema.ts, keep in sync
 const VALID_NODE_TYPES = [
   'trigger-detection',
   'trigger-sensor',
@@ -101,7 +100,6 @@ const importBlueprintSchema = zod
     message: 'Edges reference non-existent nodes',
   });
 
-// The store repo owns these curated fields; the rest is derived from the blueprint.
 const CURATED: Record<string, { category: Category; featured: boolean; tags: string[]; author?: string }> = {
   'front-door-person-alert': { category: 'detection', featured: true, tags: ['detection', 'doorbell', 'person'] },
   'motion-night-snapshot-notify': { category: 'notification', featured: false, tags: ['motion', 'night', 'snapshot'] },
@@ -149,9 +147,7 @@ function deriveRequiredPlugins(bp: Blueprint): string[] {
 function deriveRequiredInputs(bp: Blueprint): RequiredInput[] {
   const counts = new Map<InputType, number>();
   for (const input of bp.inputs ?? []) {
-    // Plugin inputs are surfaced through requiredPlugins, not here. Text inputs
-    // are plain values the wizard prefills, not a resource the card must
-    // advertise — and clients without the text input type would choke on them.
+    // plugin inputs go to requiredPlugins, text inputs are prefilled values that break clients without the text type
     if (input.type === 'plugin' || input.type === 'text') continue;
     counts.set(input.type, (counts.get(input.type) ?? 0) + 1);
   }
@@ -161,7 +157,7 @@ function deriveRequiredInputs(bp: Blueprint): RequiredInput[] {
   for (const type of order) {
     const count = counts.get(type);
     if (!count) continue;
-    // Notification targets are conceptually a single "who to notify" need.
+    // notification targets count as one need
     result.push(type === 'notification-targets' ? { type } : { type, count });
   }
   return result;
