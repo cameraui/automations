@@ -5,7 +5,10 @@
   "description": "camera.ui community automations store (blueprints + catalog)",
   "type": "module",
   "scripts": {
-    "catalog": "tsx ./scripts/catalog.ts"
+    "catalog": "tsx ./scripts/catalog.ts",
+    "update": "updates -M npm,pypi,go,cargo,docker -u",
+    "install-updates": "npm i --save",
+    "audit": "npm audit fix --min-release-age=0"
   },
   "homepage": "https://github.com/cameraui/automations#readme",
   "bugs": {
@@ -22,6 +25,11 @@
     "chalk": "^5.6.2",
     "tsx": "^4.22.4",
     "typescript": "5.9.3",
+    "updates": "^20.0.1",
     "zod": "4.4.3"
+  },
+  "allowScripts": {
+    "esbuild": true,
+    "fsevents": true
   }
 }
